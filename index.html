@@ -19,7 +19,7 @@
         body {
             font-family: 'Georgia', serif;
             overflow-x: hidden;
-            background: #0a0015;
+            background: linear-gradient(180deg, #0a0015 0%, #1a0a2e 50%, #0a0015 100%);
             min-height: 100vh;
         }
 
@@ -86,6 +86,135 @@
             text-shadow: 0 2px 10px rgba(255, 107, 157, 0.5);
         }
 
+        /* CSS Fallback Roses */
+        .css-rose-container {
+            position: fixed;
+            top: 0;
+            height: 100%;
+            width: 80px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-evenly;
+            align-items: center;
+            z-index: 0;
+            padding: 80px 0;
+        }
+
+        .css-rose-container.left { left: 0; }
+        .css-rose-container.right { right: 0; }
+
+        .css-rose {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            animation: roseGrow 2s ease-out backwards;
+        }
+
+        @keyframes roseGrow {
+            from {
+                transform: scaleY(0);
+                opacity: 0;
+            }
+            to {
+                transform: scaleY(1);
+                opacity: 1;
+            }
+        }
+
+        .rose-stem {
+            width: 4px;
+            height: 80px;
+            background: linear-gradient(to bottom, #2d5016, #4a7c2c);
+            position: relative;
+            animation: stemGrow 1.5s ease-out backwards;
+        }
+
+        @keyframes stemGrow {
+            from { height: 0; }
+            to { height: 80px; }
+        }
+
+        .rose-leaf {
+            position: absolute;
+            width: 20px;
+            height: 12px;
+            background: #4a7c2c;
+            border-radius: 0 50% 0 50%;
+            animation: leafGrow 0.8s ease-out backwards;
+        }
+
+        @keyframes leafGrow {
+            from {
+                transform: scale(0);
+                opacity: 0;
+            }
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .rose-leaf.left {
+            left: -18px;
+            top: 30%;
+            transform-origin: right center;
+            transform: rotate(-45deg);
+        }
+
+        .rose-leaf.right {
+            right: -18px;
+            top: 50%;
+            transform-origin: left center;
+            transform: rotate(45deg);
+        }
+
+        .rose-bloom {
+            width: 35px;
+            height: 35px;
+            position: relative;
+            margin-top: -5px;
+            animation: bloomGrow 1.5s ease-out 1.5s backwards, roseSway 3s ease-in-out 3s infinite;
+        }
+
+        @keyframes bloomGrow {
+            from {
+                transform: scale(0) rotate(-180deg);
+                opacity: 0;
+            }
+            to {
+                transform: scale(1) rotate(0deg);
+                opacity: 1;
+            }
+        }
+
+        @keyframes roseSway {
+            0%, 100% { transform: rotate(0deg); }
+            25% { transform: rotate(-5deg); }
+            75% { transform: rotate(5deg); }
+        }
+
+        .rose-petal {
+            position: absolute;
+            width: 15px;
+            height: 15px;
+            background: radial-gradient(circle, #ff1744, #c2185b);
+            border-radius: 50%;
+            box-shadow: 0 0 10px rgba(255, 23, 68, 0.5);
+        }
+
+        .rose-petal:nth-child(1) { top: 0; left: 10px; }
+        .rose-petal:nth-child(2) { top: 5px; left: 20px; }
+        .rose-petal:nth-child(3) { top: 15px; left: 20px; }
+        .rose-petal:nth-child(4) { top: 15px; left: 0; }
+        .rose-petal:nth-child(5) { top: 5px; left: 0; }
+        .rose-petal:nth-child(6) {
+            top: 10px;
+            left: 10px;
+            background: radial-gradient(circle, #ffd700, #ff6b00);
+            z-index: 1;
+        }
+
         .particle {
             position: fixed;
             pointer-events: none;
@@ -110,10 +239,123 @@
             0%, 100% { transform: translateX(-50%) translateY(0); }
             50% { transform: translateX(-50%) translateY(-8px); }
         }
+
+        /* Floating particles background */
+        @keyframes floatUp {
+            0% {
+                transform: translateY(0) rotate(0deg);
+                opacity: 0;
+            }
+            10% { opacity: 0.7; }
+            90% { opacity: 0.7; }
+            100% {
+                transform: translateY(-100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        .bg-particle {
+            position: fixed;
+            pointer-events: none;
+            font-size: 20px;
+            animation: floatUp 12s linear infinite;
+            z-index: 0;
+        }
     </style>
 </head>
 <body>
     <div id="canvas-container"></div>
+    
+    <!-- CSS Fallback Roses (will show if 3D fails) -->
+    <div id="css-roses-left" class="css-rose-container left" style="display: none;">
+        <div class="css-rose" style="animation-delay: 0s;">
+            <div class="rose-bloom">
+                <div class="rose-petal"></div>
+                <div class="rose-petal"></div>
+                <div class="rose-petal"></div>
+                <div class="rose-petal"></div>
+                <div class="rose-petal"></div>
+                <div class="rose-petal"></div>
+            </div>
+            <div class="rose-stem">
+                <div class="rose-leaf left" style="animation-delay: 1s;"></div>
+                <div class="rose-leaf right" style="animation-delay: 1.2s;"></div>
+            </div>
+        </div>
+        <div class="css-rose" style="animation-delay: 0.4s;">
+            <div class="rose-bloom">
+                <div class="rose-petal"></div>
+                <div class="rose-petal"></div>
+                <div class="rose-petal"></div>
+                <div class="rose-petal"></div>
+                <div class="rose-petal"></div>
+                <div class="rose-petal"></div>
+            </div>
+            <div class="rose-stem">
+                <div class="rose-leaf left" style="animation-delay: 1.4s;"></div>
+                <div class="rose-leaf right" style="animation-delay: 1.6s;"></div>
+            </div>
+        </div>
+        <div class="css-rose" style="animation-delay: 0.8s;">
+            <div class="rose-bloom">
+                <div class="rose-petal"></div>
+                <div class="rose-petal"></div>
+                <div class="rose-petal"></div>
+                <div class="rose-petal"></div>
+                <div class="rose-petal"></div>
+                <div class="rose-petal"></div>
+            </div>
+            <div class="rose-stem">
+                <div class="rose-leaf left" style="animation-delay: 1.8s;"></div>
+                <div class="rose-leaf right" style="animation-delay: 2s;"></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="css-roses-right" class="css-rose-container right" style="display: none;">
+        <div class="css-rose" style="animation-delay: 0.2s;">
+            <div class="rose-bloom">
+                <div class="rose-petal"></div>
+                <div class="rose-petal"></div>
+                <div class="rose-petal"></div>
+                <div class="rose-petal"></div>
+                <div class="rose-petal"></div>
+                <div class="rose-petal"></div>
+            </div>
+            <div class="rose-stem">
+                <div class="rose-leaf left" style="animation-delay: 1.2s;"></div>
+                <div class="rose-leaf right" style="animation-delay: 1.4s;"></div>
+            </div>
+        </div>
+        <div class="css-rose" style="animation-delay: 0.6s;">
+            <div class="rose-bloom">
+                <div class="rose-petal"></div>
+                <div class="rose-petal"></div>
+                <div class="rose-petal"></div>
+                <div class="rose-petal"></div>
+                <div class="rose-petal"></div>
+                <div class="rose-petal"></div>
+            </div>
+            <div class="rose-stem">
+                <div class="rose-leaf left" style="animation-delay: 1.6s;"></div>
+                <div class="rose-leaf right" style="animation-delay: 1.8s;"></div>
+            </div>
+        </div>
+        <div class="css-rose" style="animation-delay: 1s;">
+            <div class="rose-bloom">
+                <div class="rose-petal"></div>
+                <div class="rose-petal"></div>
+                <div class="rose-petal"></div>
+                <div class="rose-petal"></div>
+                <div class="rose-petal"></div>
+                <div class="rose-petal"></div>
+            </div>
+            <div class="rose-stem">
+                <div class="rose-leaf left" style="animation-delay: 2s;"></div>
+                <div class="rose-leaf right" style="animation-delay: 2.2s;"></div>
+            </div>
+        </div>
+    </div>
     
     <div class="content">
         <h1>💖 To My Beautiful Angel 💖</h1>
@@ -136,255 +378,231 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script>
-        // Mobile detection
+        // Check if Three.js loaded
+        let use3D = typeof THREE !== 'undefined';
         const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
         
-        // Scene setup - optimized
-        const scene = new THREE.Scene();
-        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-        const renderer = new THREE.WebGLRenderer({ 
-            alpha: true,
-            antialias: false,
-            powerPreference: "high-performance"
-        });
-        
-        renderer.setSize(window.innerWidth, window.innerHeight);
-        renderer.setPixelRatio(1);
-        document.getElementById('canvas-container').appendChild(renderer.domElement);
+        console.log('Three.js available:', use3D);
+        console.log('Is mobile:', isMobile);
 
-        camera.position.z = isMobile ? 8 : 10;
-        camera.position.y = isMobile ? -1 : 0;
-
-        // Optimized lighting
-        const ambientLight = new THREE.AmbientLight(0xffffff, 0.7);
-        scene.add(ambientLight);
-
-        const pointLight1 = new THREE.PointLight(0xff1744, 1.2, 40);
-        pointLight1.position.set(-8, 5, 5);
-        scene.add(pointLight1);
-
-        const pointLight2 = new THREE.PointLight(0xc471f5, 1.2, 40);
-        pointLight2.position.set(8, 5, 5);
-        scene.add(pointLight2);
-
-        // Simplified rose function
-        function createRose(x, y, z, delay, hue) {
-            const roseGroup = new THREE.Group();
-            
-            // Stem
-            const stemGeometry = new THREE.CylinderGeometry(0.04, 0.06, 2, 4);
-            const stemMaterial = new THREE.MeshPhongMaterial({ 
-                color: 0x2d5016,
-                flatShading: true
-            });
-            const stem = new THREE.Mesh(stemGeometry, stemMaterial);
-            stem.position.y = 1;
-            roseGroup.add(stem);
-
-            // Leaves
-            const leafGeometry = new THREE.SphereGeometry(0.15, 4, 4);
-            const leafMaterial = new THREE.MeshPhongMaterial({ 
-                color: 0x4a7c2c,
-                flatShading: true
-            });
-            
-            const leaf1 = new THREE.Mesh(leafGeometry, leafMaterial);
-            leaf1.scale.set(1.5, 0.4, 0.3);
-            leaf1.position.set(-0.25, 0.8, 0);
-            leaf1.rotation.z = Math.PI / 4;
-            roseGroup.add(leaf1);
-
-            const leaf2 = new THREE.Mesh(leafGeometry, leafMaterial);
-            leaf2.scale.set(1.5, 0.4, 0.3);
-            leaf2.position.set(0.25, 1.3, 0);
-            leaf2.rotation.z = -Math.PI / 4;
-            roseGroup.add(leaf2);
-
-            // Rose bloom
-            const roseBloom = new THREE.Group();
-            
-            // Center
-            const centerGeometry = new THREE.SphereGeometry(0.15, 6, 6);
-            const centerMaterial = new THREE.MeshPhongMaterial({ 
-                color: 0xffd700,
-                emissive: 0xff6b00,
-                emissiveIntensity: 0.3
-            });
-            const center = new THREE.Mesh(centerGeometry, centerMaterial);
-            roseBloom.add(center);
-
-            // Petals
-            const petalGeometry = new THREE.SphereGeometry(0.2, 6, 6);
-            const petalMaterial = new THREE.MeshPhongMaterial({ 
-                color: new THREE.Color(`hsl(${hue}, 90%, 60%)`),
-                emissive: new THREE.Color(`hsl(${hue}, 80%, 40%)`),
-                emissiveIntensity: 0.2
-            });
-
-            for (let i = 0; i < 6; i++) {
-                const petal = new THREE.Mesh(petalGeometry, petalMaterial);
-                const angle = (i / 6) * Math.PI * 2;
-                petal.position.x = Math.cos(angle) * 0.35;
-                petal.position.z = Math.sin(angle) * 0.35;
-                petal.scale.set(1, 0.7, 0.5);
-                roseBloom.add(petal);
-            }
-
-            roseBloom.position.y = 2.2;
-            roseGroup.add(roseBloom);
-
-            roseGroup.position.set(x, y, z);
-            
-            roseGroup.userData = {
-                delay: delay,
-                growthProgress: 0,
-                swayOffset: Math.random() * Math.PI * 2,
-                roseBloom: roseBloom
-            };
-
-            roseGroup.scale.set(0, 0, 0);
-            
-            scene.add(roseGroup);
-            return roseGroup;
-        }
-
-        // Create roses on both sides - clearly visible
-        const roses = [];
-        const rosesPerSide = isMobile ? 3 : 4;
-        
-        // Left side roses
-        for (let i = 0; i < rosesPerSide; i++) {
-            const t = i / (rosesPerSide - 1);
-            const x = isMobile ? -3.5 : -5;
-            const y = -2 + t * 4;
-            const z = 3;
-            const delay = i * 0.4;
-            const hue = 340 + i * 15;
-            roses.push(createRose(x, y, z, delay, hue));
-        }
-        
-        // Right side roses
-        for (let i = 0; i < rosesPerSide; i++) {
-            const t = i / (rosesPerSide - 1);
-            const x = isMobile ? 3.5 : 5;
-            const y = -2 + t * 4;
-            const z = 3;
-            const delay = (i + rosesPerSide) * 0.4;
-            const hue = 340 + (i + rosesPerSide) * 15;
-            roses.push(createRose(x, y, z, delay, hue));
-        }
-
-        // Minimal particles
-        const particles = [];
-        const particleCount = isMobile ? 12 : 20;
-        
-        for (let i = 0; i < particleCount; i++) {
-            const geometry = new THREE.SphereGeometry(0.05, 3, 3);
-            const hue = (i / particleCount) * 360;
-            const material = new THREE.MeshBasicMaterial({ 
-                color: new THREE.Color(`hsl(${hue}, 100%, 70%)`),
-                transparent: true,
-                opacity: 0.6
-            });
-            const particle = new THREE.Mesh(geometry, material);
-            
-            particle.position.x = (Math.random() - 0.5) * 20;
-            particle.position.y = (Math.random() - 0.5) * 15;
-            particle.position.z = (Math.random() - 0.5) * 15;
-            
-            particle.userData = {
-                velocity: Math.random() * 0.015 + 0.01,
-                rotation: Math.random() * 0.02
-            };
-            
-            scene.add(particle);
-            particles.push(particle);
-        }
-
-        // Animation loop - 30 FPS for smooth mobile performance
-        let lastTime = performance.now();
-        let time = 0;
-        const targetFPS = 30;
-        const frameTime = 1000 / targetFPS;
-
-        function animate(currentTime) {
-            requestAnimationFrame(animate);
-            
-            const deltaTime = currentTime - lastTime;
-            if (deltaTime < frameTime) return;
-            
-            lastTime = currentTime - (deltaTime % frameTime);
-            time += deltaTime * 0.001;
-
-            // Animate roses
-            roses.forEach((rose) => {
-                const userData = rose.userData;
+        if (use3D) {
+            try {
+                // Scene setup
+                const scene = new THREE.Scene();
+                const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+                const renderer = new THREE.WebGLRenderer({ 
+                    alpha: true,
+                    antialias: false
+                });
                 
-                if (time > userData.delay) {
-                    const localTime = time - userData.delay;
-                    
-                    // Growth
-                    if (localTime < 2) {
-                        userData.growthProgress = Math.min(localTime / 2, 1);
-                        const eased = 1 - Math.pow(1 - userData.growthProgress, 3);
-                        rose.scale.set(eased, eased, eased);
-                    }
-                    
-                    // Sway
-                    if (localTime > 2) {
-                        const sway = Math.sin(time * 0.5 + userData.swayOffset) * 0.04;
-                        rose.rotation.z = sway;
-                        userData.roseBloom.rotation.y = time * 0.25;
-                    }
-                }
-            });
-
-            // Animate particles
-            particles.forEach((particle) => {
-                particle.position.y += particle.userData.velocity;
-                particle.rotation.y += particle.userData.rotation;
-                
-                if (particle.position.y > 10) {
-                    particle.position.y = -10;
-                    particle.position.x = (Math.random() - 0.5) * 20;
-                }
-                
-                const pulse = Math.sin(time * 2) * 0.2 + 0.6;
-                particle.material.opacity = pulse;
-            });
-
-            // Light animation
-            pointLight1.position.x = -8 + Math.sin(time * 0.3) * 1.5;
-            pointLight2.position.x = 8 + Math.cos(time * 0.3) * 1.5;
-
-            // Gentle camera sway
-            camera.position.x = Math.sin(time * 0.08) * 0.2;
-            camera.lookAt(0, 0, 0);
-
-            renderer.render(scene, camera);
-        }
-
-        // Resize handler
-        let resizeTimeout;
-        window.addEventListener('resize', () => {
-            clearTimeout(resizeTimeout);
-            resizeTimeout = setTimeout(() => {
-                camera.aspect = window.innerWidth / window.innerHeight;
-                camera.updateProjectionMatrix();
                 renderer.setSize(window.innerWidth, window.innerHeight);
-            }, 200);
-        });
+                renderer.setPixelRatio(1);
+                document.getElementById('canvas-container').appendChild(renderer.domElement);
+
+                camera.position.z = isMobile ? 6 : 8;
+                camera.position.y = 0;
+
+                console.log('3D scene initialized');
+
+                // Lighting
+                const ambientLight = new THREE.AmbientLight(0xffffff, 0.8);
+                scene.add(ambientLight);
+
+                const pointLight1 = new THREE.PointLight(0xff1744, 1.5, 40);
+                pointLight1.position.set(-6, 5, 5);
+                scene.add(pointLight1);
+
+                const pointLight2 = new THREE.PointLight(0xc471f5, 1.5, 40);
+                pointLight2.position.set(6, 5, 5);
+                scene.add(pointLight2);
+
+                // Create rose function
+                function createRose(x, y, z, delay, hue) {
+                    const roseGroup = new THREE.Group();
+                    
+                    // Stem
+                    const stemGeometry = new THREE.CylinderGeometry(0.04, 0.06, 2, 6);
+                    const stemMaterial = new THREE.MeshPhongMaterial({ 
+                        color: 0x2d5016
+                    });
+                    const stem = new THREE.Mesh(stemGeometry, stemMaterial);
+                    stem.position.y = 1;
+                    roseGroup.add(stem);
+
+                    // Leaves
+                    const leafGeometry = new THREE.SphereGeometry(0.15, 6, 6);
+                    const leafMaterial = new THREE.MeshPhongMaterial({ 
+                        color: 0x4a7c2c
+                    });
+                    
+                    const leaf1 = new THREE.Mesh(leafGeometry, leafMaterial);
+                    leaf1.scale.set(1.5, 0.4, 0.3);
+                    leaf1.position.set(-0.25, 0.8, 0);
+                    leaf1.rotation.z = Math.PI / 4;
+                    roseGroup.add(leaf1);
+
+                    const leaf2 = new THREE.Mesh(leafGeometry, leafMaterial);
+                    leaf2.scale.set(1.5, 0.4, 0.3);
+                    leaf2.position.set(0.25, 1.3, 0);
+                    leaf2.rotation.z = -Math.PI / 4;
+                    roseGroup.add(leaf2);
+
+                    // Rose bloom
+                    const roseBloom = new THREE.Group();
+                    
+                    // Center
+                    const centerGeometry = new THREE.SphereGeometry(0.15, 8, 8);
+                    const centerMaterial = new THREE.MeshPhongMaterial({ 
+                        color: 0xffd700,
+                        emissive: 0xff6b00,
+                        emissiveIntensity: 0.3
+                    });
+                    const center = new THREE.Mesh(centerGeometry, centerMaterial);
+                    roseBloom.add(center);
+
+                    // Petals
+                    const petalGeometry = new THREE.SphereGeometry(0.2, 8, 8);
+                    const petalMaterial = new THREE.MeshPhongMaterial({ 
+                        color: new THREE.Color(`hsl(${hue}, 90%, 60%)`),
+                        emissive: new THREE.Color(`hsl(${hue}, 80%, 40%)`),
+                        emissiveIntensity: 0.2
+                    });
+
+                    for (let i = 0; i < 6; i++) {
+                        const petal = new THREE.Mesh(petalGeometry, petalMaterial);
+                        const angle = (i / 6) * Math.PI * 2;
+                        petal.position.x = Math.cos(angle) * 0.35;
+                        petal.position.z = Math.sin(angle) * 0.35;
+                        petal.scale.set(1, 0.7, 0.5);
+                        roseBloom.add(petal);
+                    }
+
+                    roseBloom.position.y = 2.2;
+                    roseGroup.add(roseBloom);
+
+                    roseGroup.position.set(x, y, z);
+                    
+                    roseGroup.userData = {
+                        delay: delay,
+                        growthProgress: 0,
+                        swayOffset: Math.random() * Math.PI * 2,
+                        roseBloom: roseBloom
+                    };
+
+                    roseGroup.scale.set(0, 0, 0);
+                    
+                    scene.add(roseGroup);
+                    return roseGroup;
+                }
+
+                // Create roses
+                const roses = [];
+                const rosesPerSide = 3;
+                
+                // Left side
+                for (let i = 0; i < rosesPerSide; i++) {
+                    const t = i / (rosesPerSide - 1);
+                    const x = isMobile ? -2.5 : -3.5;
+                    const y = -2 + t * 4;
+                    const z = 2;
+                    const delay = i * 0.4;
+                    const hue = 340 + i * 15;
+                    roses.push(createRose(x, y, z, delay, hue));
+                }
+                
+                // Right side
+                for (let i = 0; i < rosesPerSide; i++) {
+                    const t = i / (rosesPerSide - 1);
+                    const x = isMobile ? 2.5 : 3.5;
+                    const y = -2 + t * 4;
+                    const z = 2;
+                    const delay = (i + rosesPerSide) * 0.4;
+                    const hue = 340 + (i + rosesPerSide) * 15;
+                    roses.push(createRose(x, y, z, delay, hue));
+                }
+
+                console.log('Created', roses.length, 'roses');
+
+                // Animation
+                let time = 0;
+
+                function animate() {
+                    requestAnimationFrame(animate);
+                    time += 0.016;
+
+                    roses.forEach((rose) => {
+                        const userData = rose.userData;
+                        
+                        if (time > userData.delay) {
+                            const localTime = time - userData.delay;
+                            
+                            if (localTime < 2) {
+                                userData.growthProgress = Math.min(localTime / 2, 1);
+                                const eased = 1 - Math.pow(1 - userData.growthProgress, 3);
+                                rose.scale.set(eased, eased, eased);
+                            }
+                            
+                            if (localTime > 2) {
+                                const sway = Math.sin(time * 0.5 + userData.swayOffset) * 0.04;
+                                rose.rotation.z = sway;
+                                userData.roseBloom.rotation.y = time * 0.25;
+                            }
+                        }
+                    });
+
+                    pointLight1.position.x = -6 + Math.sin(time * 0.3) * 1.5;
+                    pointLight2.position.x = 6 + Math.cos(time * 0.3) * 1.5;
+
+                    renderer.render(scene, camera);
+                }
+
+                window.addEventListener('resize', () => {
+                    camera.aspect = window.innerWidth / window.innerHeight;
+                    camera.updateProjectionMatrix();
+                    renderer.setSize(window.innerWidth, window.innerHeight);
+                });
+
+                animate();
+                console.log('Animation started');
+
+            } catch (error) {
+                console.error('3D error:', error);
+                use3D = false;
+            }
+        }
+
+        // Fallback to CSS roses if 3D failed
+        if (!use3D) {
+            console.log('Using CSS fallback roses');
+            document.getElementById('css-roses-left').style.display = 'flex';
+            document.getElementById('css-roses-right').style.display = 'flex';
+        }
+
+        // Background particles
+        function createBgParticle() {
+            const emojis = ['💖', '✨', '🌹', '💝', '💕'];
+            const particle = document.createElement('div');
+            particle.className = 'bg-particle';
+            particle.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+            particle.style.left = Math.random() * 100 + '%';
+            particle.style.bottom = '-30px';
+            particle.style.animationDelay = Math.random() * 2 + 's';
+            particle.style.animationDuration = (8 + Math.random() * 4) + 's';
+            document.body.appendChild(particle);
+            
+            setTimeout(() => particle.remove(), 12000);
+        }
+
+        setInterval(createBgParticle, 2000);
 
         // Touch interaction
         function handleInteraction(e) {
-            const tapHint = document.querySelector('.tap-hint');
-            if (tapHint) tapHint.style.opacity = '0';
+            document.querySelector('.tap-hint').style.opacity = '0';
             
             const touch = e.touches ? e.touches[0] : e;
             const x = touch.clientX;
             const y = touch.clientY;
             
-            // Burst effect
             for (let i = 0; i < 5; i++) {
                 const angle = (i / 5) * Math.PI * 2;
                 const distance = 40;
@@ -415,39 +633,6 @@
 
         document.addEventListener('touchstart', handleInteraction, { passive: true });
         document.addEventListener('click', handleInteraction);
-
-        // Floating emoji
-        function createFloatingEmoji() {
-            if (Math.random() > 0.6) {
-                const emojis = ['💖', '✨', '🌹', '💝'];
-                const particle = document.createElement('div');
-                particle.className = 'particle';
-                particle.textContent = emojis[Math.floor(Math.random() * emojis.length)];
-                particle.style.left = Math.random() * 100 + '%';
-                particle.style.top = '110%';
-                particle.style.position = 'fixed';
-                document.body.appendChild(particle);
-                
-                const duration = 6000;
-                const targetY = -120;
-                
-                particle.animate([
-                    { transform: 'translateY(0)', opacity: 0 },
-                    { transform: `translateY(${targetY}vh)`, opacity: 1, offset: 0.5 },
-                    { transform: `translateY(${targetY * 1.5}vh)`, opacity: 0 }
-                ], {
-                    duration: duration,
-                    easing: 'linear'
-                });
-                
-                setTimeout(() => particle.remove(), duration);
-            }
-        }
-
-        setInterval(createFloatingEmoji, 2000);
-
-        // Start animation
-        animate(performance.now());
     </script>
 </body>
 </html>
