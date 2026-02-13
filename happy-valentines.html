@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>For My Beautiful Angel 💖</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', serif;
+            overflow-x: hidden;
+            background: #0a0015;
+            touch-action: pan-y;
+        }
+
+        #canvas-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+        }
+
+        .content {
+            position: relative;
+            z-index: 1;
+            pointer-events: none;
+            padding: 20px;
+            text-align: center;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+            padding-top: 60px;
+        }
+
+        h1 {
+            font-size: clamp(2rem, 8vw, 4rem);
+            background: linear-gradient(135deg, #ff6b9d, #ffd93d, #c471f5, #ff6b9d);
+            background-size: 300% 300%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: gradientShift 4s ease infinite, pulse 2s ease-in-out infinite;
+            text-shadow: 0 0 30px rgba(255, 107, 157, 0.5);
+            margin-bottom: 20px;
+            filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
+            transform-origin: center;
+        }
+
+        @keyframes gradientShift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .message {
+            font-size: clamp(1.2rem, 4vw, 2rem);
+            color: #fff;
+            text-shadow: 0 2px 20px rgba(255, 107, 157, 0.8),
+                         0 0 40px rgba(255, 215, 0, 0.4);
+            margin: 20px auto;
+            max-width: 90%;
+            line-height: 1.8;
+            animation: fadeIn 2s ease, float 3s ease-in-out infinite;
+            font-style: italic;
+            position: relative;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .love-note {
+            background: linear-gradient(135deg, rgba(255, 107, 157, 0.1), rgba(196, 113, 245, 0.1));
+            backdrop-filter: blur(20px);
+            border-radius: 25px;
+            padding: clamp(20px, 5vw, 40px);
+            margin: 40px auto 60px;
+            max-width: 600px;
+            box-shadow: 0 8px 32px rgba(255, 107, 157, 0.3),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.1),
+                        0 0 80px rgba(196, 113, 245, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            animation: fadeInUp 2s ease 1s backwards, glow 3s ease-in-out infinite;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .love-note::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+            animation: shimmer 6s linear infinite;
+        }
+
+        @keyframes shimmer {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @keyframes glow {
+            0%, 100% { box-shadow: 0 8px 32px rgba(255, 107, 157, 0.3), 0 0 80px rgba(196, 113, 245, 0.2); }
+            50% { box-shadow: 0 8px 32px rgba(255, 107, 157, 0.5), 0 0 100px rgba(196, 113, 245, 0.4); }
+        }
+
+        .love-note p {
+            font-size: clamp(1rem, 3.5vw, 1.5rem);
+            color: #ffd6e8;
+            line-height: 2;
+            margin: 15px 0;
+            text-shadow: 0 2px 10px rgba(255, 107, 157, 0.5);
+            position: relative;
+            z-index: 1;
+            animation: textGlow 3s ease-in-out infinite;
+        }
+
+        @keyframes textGlow {
+            0%, 100% { text-shadow: 0 2px 10px rgba(255, 107, 157, 0.5); }
+            50% { text-shadow: 0 2px 20px rgba(255, 107, 157, 0.8), 0 0 30px rgba(255, 215, 0, 0.4); }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .particle {
+            position: fixed;
+            pointer-events: none;
+            font-size: clamp(20px, 5vw, 28px);
+            z-index: 2;
+            will-change: transform, opacity;
+        }
+
+        .tap-hint {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: rgba(255, 255, 255, 0.7);
+            font-size: clamp(0.9rem, 3vw, 1.1rem);
+            animation: bounce 2s ease-in-out infinite;
+            z-index: 10;
+            pointer-events: none;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateX(-50%) translateY(0); }
+            50% { transform: translateX(-50%) translateY(-10px); }
+        }
+
+        @media (max-width: 768px) {
+            .content {
+                padding-top: 40px;
+            }
+            
+            h1 {
+                margin-bottom: 15px;
+            }
+            
+            .message {
+                margin: 15px auto;
+            }
+            
+            .love-note {
+                margin: 30px auto 50px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .content {
+                padding-top: 30px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="canvas-container"></div>
+    
+    <div class="content">
+        <h1>💖 To My Beautiful Angel 💖</h1>
+        
+        <p class="message">
+            I love you so much my pretty beautiful angel
+        </p>
+
+        <div class="love-note">
+            <p>🌹 Every rose that blooms is a reminder of my love for you 🌹</p>
+            <p>💝 You are the light of my life, my everything 💝</p>
+            <p>✨ Forever and always, my heart belongs to you ✨</p>
+            <p>💕 Ikaw lng mamahalin ko palagi, at gagawin ko ang best ko para sa future natin at para sa magiging future anak natin hihihihihi 💕</p>
+            <p>🌸 Ingat ka palagi sa ojt mo nandito lng ako palagi para mag supporta para sayo 🌸</p>
+            <p>👑 I love you so much pretty beautiful angel 👑</p>
+        </div>
+    </div>
+
+    <div class="tap-hint">✨ Tap anywhere for magic ✨</div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script>
+        // Detect mobile and performance
+        const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth < 768;
+        const isLowEnd = isMobile || navigator.hardwareConcurrency <= 4;
+        
+        // Scene setup with performance optimizations
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ 
+            antialias: !isMobile, 
+            alpha: true,
+            powerPreference: "high-performance"
+        });
+        
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, isMobile ? 1 : 2));
+        document.getElementById('canvas-container').appendChild(renderer.domElement);
+
+        camera.position.z = isMobile ? 12 : 10;
+        camera.position.y = isMobile ? 0 : 1;
+
+        // Simplified lighting for better performance
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+        scene.add(ambientLight);
+
+        const lights = [];
+        const lightColors = [0xff1744, 0xc471f5];
+        
+        for (let i = 0; i < 2; i++) {
+            const light = new THREE.PointLight(lightColors[i], 1.5, 50);
+            light.position.set(i === 0 ? -10 : 10, 5, 5);
+            scene.add(light);
+            lights.push(light);
+        }
+
+        // Simplified rose creation
+        function createRose(x, y, z, delay, hue) {
+            const roseGroup = new THREE.Group();
+            
+            // Simple stem
+            const stemGeometry = new THREE.CylinderGeometry(0.05, 0.08, 2.5, 6);
+            const stemMaterial = new THREE.MeshPhongMaterial({ 
+                color: 0x2d5016,
+                flatShading: true
+            });
+            const stem = new THREE.Mesh(stemGeometry, stemMaterial);
+            stem.position.y = 1.25;
+            roseGroup.add(stem);
+
+            // Simple leaves
+            for (let i = 0; i < 2; i++) {
+                const leafGeometry = new THREE.SphereGeometry(0.2, 6, 6);
+                const leafMaterial = new THREE.MeshPhongMaterial({ 
+                    color: 0x4a7c2c,
+                    flatShading: true
+                });
+                
+                const leaf = new THREE.Mesh(leafGeometry, leafMaterial);
+                leaf.scale.set(1.5, 0.4, 0.3);
+                const side = i === 0 ? 1 : -1;
+                leaf.position.set(side * 0.3, 1 + i * 0.6, 0);
+                leaf.rotation.z = side * Math.PI / 4;
+                roseGroup.add(leaf);
+            }
+
+            // Simplified rose bloom
+            const roseBloom = new THREE.Group();
+            
+            // Center
+            const centerGeometry = new THREE.SphereGeometry(0.2, 8, 8);
+            const centerMaterial = new THREE.MeshPhongMaterial({ 
+                color: 0xffd700,
+                emissive: 0xff6b00,
+                emissiveIntensity: 0.3
+            });
+            const center = new THREE.Mesh(centerGeometry, centerMaterial);
+            roseBloom.add(center);
+
+            // Simplified petal arrangement
+            const petalGeometry = new THREE.SphereGeometry(0.25, 8, 8);
+            const petalMaterial = new THREE.MeshPhongMaterial({ 
+                color: new THREE.Color(`hsl(${hue}, 90%, 60%)`),
+                emissive: new THREE.Color(`hsl(${hue}, 80%, 40%)`),
+                emissiveIntensity: 0.2
+            });
+
+            // Single layer of petals
+            for (let i = 0; i < 8; i++) {
+                const petal = new THREE.Mesh(petalGeometry, petalMaterial);
+                const angle = (i / 8) * Math.PI * 2;
+                petal.position.x = Math.cos(angle) * 0.5;
+                petal.position.z = Math.sin(angle) * 0.5;
+                petal.scale.set(1.2, 0.7, 0.5);
+                roseBloom.add(petal);
+            }
+
+            roseBloom.position.y = 2.8;
+            roseGroup.add(roseBloom);
+
+            roseGroup.position.set(x, y, z);
+            
+            roseGroup.userData = {
+                delay: delay,
+                growthProgress: 0,
+                swayOffset: Math.random() * Math.PI * 2,
+                roseBloom: roseBloom
+            };
+
+            roseGroup.scale.set(0, 0, 0);
+            
+            scene.add(roseGroup);
+            return roseGroup;
+        }
+
+        // Position roses on left and right sides - MUCH CLOSER to camera
+        const roses = [];
+        const rosesPerSide = isLowEnd ? 4 : 6;
+        
+        // Left side roses - positioned in front of content
+        for (let i = 0; i < rosesPerSide; i++) {
+            const t = i / (rosesPerSide - 1);
+            const x = isMobile ? -5 - Math.random() * 0.5 : -6.5 - Math.random() * 0.5;
+            const y = -4 + t * 8;
+            const z = 2 + Math.random() * 1; // Closer to camera (positive Z)
+            const delay = i * 0.3;
+            const hue = 340 + i * 10;
+            roses.push(createRose(x, y, z, delay, hue));
+        }
+        
+        // Right side roses - positioned in front of content
+        for (let i = 0; i < rosesPerSide; i++) {
+            const t = i / (rosesPerSide - 1);
+            const x = isMobile ? 5 + Math.random() * 0.5 : 6.5 + Math.random() * 0.5;
+            const y = -4 + t * 8;
+            const z = 2 + Math.random() * 1; // Closer to camera (positive Z)
+            const delay = (i + rosesPerSide) * 0.3;
+            const hue = 340 + (i + rosesPerSide) * 10;
+            roses.push(createRose(x, y, z, delay, hue));
+        }
+
+        // Reduced particles for performance
+        const particles = [];
+        const particleCount = isLowEnd ? 15 : 30;
+        
+        for (let i = 0; i < particleCount; i++) {
+            const geometry = new THREE.SphereGeometry(0.05, 4, 4);
+            const hue = (i / particleCount) * 360;
+            const material = new THREE.MeshBasicMaterial({ 
+                color: new THREE.Color(`hsl(${hue}, 100%, 70%)`),
+                transparent: true,
+                opacity: 0.7
+            });
+            const particle = new THREE.Mesh(geometry, material);
+            
+            particle.position.x = (Math.random() - 0.5) * 30;
+            particle.position.y = (Math.random() - 0.5) * 20;
+            particle.position.z = (Math.random() - 0.5) * 20;
+            
+            particle.userData = {
+                velocity: {
+                    y: Math.random() * 0.02 + 0.01,
+                    x: (Math.random() - 0.5) * 0.01
+                },
+                baseY: particle.position.y
+            };
+            
+            scene.add(particle);
+            particles.push(particle);
+        }
+
+        // Optimized animation loop
+        let lastTime = performance.now();
+        let time = 0;
+        const targetFPS = 60;
+        const frameTime = 1000 / targetFPS;
+
+        function animate(currentTime) {
+            requestAnimationFrame(animate);
+            
+            const deltaTime = currentTime - lastTime;
+            if (deltaTime < frameTime) return;
+            
+            lastTime = currentTime - (deltaTime % frameTime);
+            time += deltaTime * 0.001;
+
+            // Animate roses with simplified motion
+            roses.forEach((rose, index) => {
+                const userData = rose.userData;
+                
+                if (time > userData.delay) {
+                    const localTime = time - userData.delay;
+                    
+                    // Smooth growth
+                    if (localTime < 2) {
+                        userData.growthProgress = Math.min(localTime / 2, 1);
+                        const eased = 1 - Math.pow(1 - userData.growthProgress, 3);
+                        rose.scale.set(eased, eased, eased);
+                    }
+                    
+                    // Gentle sway
+                    if (localTime > 2) {
+                        const sway = Math.sin(time * 0.5 + userData.swayOffset) * 0.05;
+                        rose.rotation.z = sway;
+                        
+                        // Simple bloom rotation
+                        userData.roseBloom.rotation.y = time * 0.3;
+                    }
+                }
+            });
+
+            // Simplified particle animation
+            particles.forEach((particle, i) => {
+                particle.position.y += particle.userData.velocity.y;
+                particle.position.x += particle.userData.velocity.x;
+                
+                if (particle.position.y > 12) {
+                    particle.position.y = -12;
+                    particle.position.x = (Math.random() - 0.5) * 30;
+                }
+                
+                const pulse = Math.sin(time * 2 + i) * 0.3 + 0.7;
+                particle.material.opacity = pulse * 0.7;
+            });
+
+            // Minimal light animation
+            lights[0].position.x = -10 + Math.sin(time * 0.3) * 2;
+            lights[1].position.x = 10 + Math.cos(time * 0.3) * 2;
+
+            // Very subtle camera movement
+            camera.position.x = Math.sin(time * 0.1) * 0.3;
+            camera.lookAt(0, 0, 0);
+
+            renderer.render(scene, camera);
+        }
+
+        // Handle window resize
+        let resizeTimeout;
+        window.addEventListener('resize', () => {
+            clearTimeout(resizeTimeout);
+            resizeTimeout = setTimeout(() => {
+                camera.aspect = window.innerWidth / window.innerHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(window.innerWidth, window.innerHeight);
+            }, 100);
+        });
+
+        // Optimized touch interaction
+        function handleInteraction(e) {
+            e.preventDefault();
+            
+            document.querySelector('.tap-hint').style.opacity = '0';
+            
+            const touch = e.touches ? e.touches[0] : e;
+            const x = touch.clientX;
+            const y = touch.clientY;
+            
+            // Reduced burst particles
+            for (let i = 0; i < 5; i++) {
+                const angle = (i / 5) * Math.PI * 2;
+                const distance = 40;
+                const emoji = document.createElement('div');
+                emoji.className = 'particle';
+                const emojis = ['💖', '✨', '🌹', '💝', '💕'];
+                emoji.textContent = emojis[i];
+                emoji.style.left = x + 'px';
+                emoji.style.top = y + 'px';
+                emoji.style.position = 'fixed';
+                emoji.style.zIndex = '1000';
+                document.body.appendChild(emoji);
+                
+                const targetX = x + Math.cos(angle) * distance;
+                const targetY = y + Math.sin(angle) * distance;
+                
+                emoji.animate([
+                    { 
+                        transform: 'translate(-50%, -50%) scale(0)', 
+                        opacity: 1 
+                    },
+                    { 
+                        transform: `translate(${targetX - x}px, ${targetY - y}px) scale(1.2)`, 
+                        opacity: 0 
+                    }
+                ], {
+                    duration: 800,
+                    easing: 'ease-out'
+                });
+                
+                setTimeout(() => emoji.remove(), 800);
+            }
+        }
+
+        document.addEventListener('touchstart', handleInteraction, { passive: false });
+        document.addEventListener('click', handleInteraction);
+
+        // Reduced floating emoji
+        function createFloatingEmoji() {
+            if (Math.random() > 0.7) {
+                const emojis = ['💖', '✨', '🌹', '💝', '💕'];
+                const emoji = document.createElement('div');
+                emoji.className = 'particle';
+                emoji.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+                emoji.style.left = Math.random() * 100 + '%';
+                emoji.style.top = '110%';
+                document.body.appendChild(emoji);
+                
+                const duration = 5000;
+                const targetY = -15;
+                
+                emoji.animate([
+                    { 
+                        transform: `translateY(0)`, 
+                        opacity: 0 
+                    },
+                    { 
+                        transform: `translateY(${targetY}vh)`, 
+                        opacity: 1,
+                        offset: 0.5
+                    },
+                    { 
+                        transform: `translateY(${targetY * 2}vh)`, 
+                        opacity: 0 
+                    }
+                ], {
+                    duration: duration,
+                    easing: 'linear'
+                });
+                
+                setTimeout(() => emoji.remove(), duration);
+            }
+        }
+
+        setInterval(createFloatingEmoji, 1000);
+
+        // Start animation
+        animate(performance.now());
+
+        // Hide tap hint
+        let hasInteracted = false;
+        document.addEventListener('touchstart', () => {
+            if (!hasInteracted) {
+                hasInteracted = true;
+                setTimeout(() => {
+                    const hint = document.querySelector('.tap-hint');
+                    if (hint) hint.style.display = 'none';
+                }, 2000);
+            }
+        }, { once: true });
+    </script>
+</body>
+</html>
